@@ -46,7 +46,7 @@ class OrderController extends Controller
         ]);
 
         $p_order= new Order;
-        $p_order->number = random_int(10000000,99999999);
+        $p_order->number = random_int(00000000,99999999);
         $p_order->quantity = 1;
         $p_order->user_id = $request->user_id;
         $p_order->product_id=$request->product_id;
@@ -58,7 +58,7 @@ class OrderController extends Controller
 
         $p_order->save();
 
-        return response()->json('Success');
+        return response()->json($p_order);
     }
 
     /**
