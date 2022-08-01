@@ -53,10 +53,10 @@ class AuthController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function register(Request $request) {
-        // return $request->all();
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|between:2,100',
             'username' => 'required|string|between:2,100',
+            'phone' => 'string',
             'email' => 'required|string|email|max:100|unique:users',
             'password' => 'required|string|confirmed|min:6',
         ]);
@@ -94,7 +94,6 @@ class AuthController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function refresh() {
-        // return $request->all();
         return $this->createNewToken(auth()->refresh());
     }
 

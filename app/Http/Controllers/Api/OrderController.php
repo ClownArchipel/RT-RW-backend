@@ -46,19 +46,32 @@ class OrderController extends Controller
         ]);
 
         $p_order= new Order;
-        $p_order->number = random_int(00000000,99999999);
+        $p_order->status = 'pending';
+        $p_order->transaction_id = "RTRW-".strtoupper(uniqid());
+        $p_order->order_id = random_int(00000000,99999999);
+        if($request->number != null){
+            $p_order->number = $request->number;
+        }else{
+            $p_order->number = 0;
+        }
         $p_order->quantity = 1;
         $p_order->user_id = $request->user_id;
         $p_order->product_id=$request->product_id;
+        $p_order->payment_type = $request->payment_type;
+        $p_order->code = $request->code;
+        $p_order->pdf_url = isset($request->pdf_url) ? $request->pdf_url : null;
 
         $product = Product::find($request->product_id);
+        $p_order->duration=$product->duration;
 
         $total = $product->price * $p_order->quantity;
-        $p_order->total_price = $total;
+        $p_order->gross_amount = $total;
 
         $p_order->save();
 
         return response()->json($p_order);
+
+
     }
 
     /**
@@ -83,27 +96,18 @@ class OrderController extends Controller
         return response()->json($order);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Order  $order
-     * @return \Illuminate\Http\Response
-     */
+
     public function edit(Order $order)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Order  $order
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Order $order)
+    public function update(Request $request,$id)
     {
-        //
+        $findorder = Order::findOrFail($id);
+        $findorder->update($request->all());
+
+        return response()->json($request);
     }
 
     /**
@@ -112,8 +116,16 @@ class OrderController extends Controller
      * @param  \App\Models\Order  $order
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Order $order)
+    public function destroy($id)
     {
-        //
+        Order::find($id)->delete();
+		return response()->json([], 204);
+    }
+
+    //custom
+    public function getorder($id)
+    {
+        $findorder = Order::where("user_id",$id)->get();
+        return response()->json($findorder);
     }
 }

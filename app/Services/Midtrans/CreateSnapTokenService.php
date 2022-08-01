@@ -23,7 +23,7 @@ class CreateSnapTokenService extends Midtrans
         $user=User::find($this->order->user_id);
 		$params = [
 			'transaction_details' => [
-				'order_id' => $this->order->number,
+				'order_id' => $this->order->order_id,
 				'gross_amount' => $product->price,
 			],
 

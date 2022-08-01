@@ -15,6 +15,9 @@ use Illuminate\Support\Facades\Route;
 */
 Route::resource('order', 'App\Http\Controllers\Api\OrderController');
 Route::resource('product', 'App\Http\Controllers\Api\ProductController');
+Route::resource('voucher', 'App\Http\Controllers\Api\VoucherController');
+Route::post('/payment-handler','App\Http\Controllers\ApiController@payment_handler');
+Route::get('/findlist/{id}', 'App\Http\Controllers\Api\OrderController@getorder');
 
 Route::group([
     'middleware' => 'api',
